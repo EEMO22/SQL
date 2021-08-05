@@ -1,38 +1,38 @@
 ----------
 -- SUBQUERY
 ----------
--- ÇÏ³ªÀÇ ÁúÀÇ¹® ¾È¿¡ ´Ù¸¥ ÁúÀÇ¹®À» Æ÷ÇÔÇÏ´Â ÇüÅÂ
+-- í•˜ë‚˜ì˜ ì§ˆì˜ë¬¸ ì•ˆì— ë‹¤ë¥¸ ì§ˆì˜ë¬¸ì„ í¬í•¨í•˜ëŠ” í˜•íƒœ
 
--- ÀüÃ¼ »ç¿ø Áß, ±Ş¿©ÀÇ Áß¾Ó°ªº¸´Ù ¸¹ÀÌ ¹Ş´Â »ç¿ø
+-- ì „ì²´ ì‚¬ì› ì¤‘, ê¸‰ì—¬ì˜ ì¤‘ì•™ê°’ë³´ë‹¤ ë§ì´ ë°›ëŠ” ì‚¬ì›
 
--- 1. ±Ş¿©ÀÇ Áß¾Ó°ª?
+-- 1. ê¸‰ì—¬ì˜ ì¤‘ì•™ê°’?
 SELECT MEDIAN(salary) FROM employees;   --  6200
--- 2. 6200º¸´Ù ¸¹ÀÌ ¹Ş´Â »ç¿ø Äõ¸®
+-- 2. 6200ë³´ë‹¤ ë§ì´ ë°›ëŠ” ì‚¬ì› ì¿¼ë¦¬
 SELECT first_name, salary FROM employees WHERE salary > 6200;
 
--- 3. µÎ Äõ¸®¸¦ ÇÕÄ£´Ù.
+-- 3. ë‘ ì¿¼ë¦¬ë¥¼ í•©ì¹œë‹¤.
 SELECT first_name, salary FROM employees
 WHERE salary > (SELECT MEDIAN(salary) FROM employees);
 
--- Den º¸´Ù ´Ê°Ô ÀÔ»çÇÑ »ç¿øµé
--- 1. Den ÀÔ»çÀÏ Äõ¸®
+-- Den ë³´ë‹¤ ëŠ¦ê²Œ ì…ì‚¬í•œ ì‚¬ì›ë“¤
+-- 1. Den ì…ì‚¬ì¼ ì¿¼ë¦¬
 SELECT hire_date FROM employees WHERE first_name = 'Den'; -- 02/12/07
--- 2. Æ¯Á¤ ³¯Â¥ ÀÌÈÄ ÀÔ»çÇÑ »ç¿ø Äõ¸®
+-- 2. íŠ¹ì • ë‚ ì§œ ì´í›„ ì…ì‚¬í•œ ì‚¬ì› ì¿¼ë¦¬
 SELECT first_name, hire_date FROM employees WHERE hire_date >= '02/12/07';
--- 3. µÎ Äõ¸®¸¦ ÇÕÄ£´Ù.
+-- 3. ë‘ ì¿¼ë¦¬ë¥¼ í•©ì¹œë‹¤.
 SELECT first_name, hire_date 
 FROM employees 
 WHERE hire_date >= (SELECT hire_date FROM employees WHERE first_name = 'Den');
 
--- ´ÙÁßÇà ¼­ºê Äõ¸®
--- ¼­ºê Äõ¸®ÀÇ °á°ú ·¹ÄÚµå°¡ µÑ ÀÌ»óÀÌ ³ª¿Ã ¶§´Â ´ÜÀÏÇà ¿¬»êÀÚ¸¦ »ç¿ëÇÒ ¼ö ¾ø´Ù
--- IN, ANY, ALL, EXISTS µî ÁıÇÕ ¿¬»êÀÚ¸¦ È°¿ë
+-- ë‹¤ì¤‘í–‰ ì„œë¸Œ ì¿¼ë¦¬
+-- ì„œë¸Œ ì¿¼ë¦¬ì˜ ê²°ê³¼ ë ˆì½”ë“œê°€ ë‘˜ ì´ìƒì´ ë‚˜ì˜¬ ë•ŒëŠ” ë‹¨ì¼í–‰ ì—°ì‚°ìë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ë‹¤
+-- IN, ANY, ALL, EXISTS ë“± ì§‘í•© ì—°ì‚°ìë¥¼ í™œìš©
 SELECT salary FROM employees WHERE department_id = 110; -- 2 ROW
 
 SELECT first_name, salary FROM employees
 WHERE salary = (SELECT salary FROM employees WHERE department_id = 110); -- ERROR
 
--- °á°ú°¡ ´ÙÁßÇàÀÌ¸é ÁıÇÕ ¿¬»êÀÚ¸¦ È°¿ë
+-- ê²°ê³¼ê°€ ë‹¤ì¤‘í–‰ì´ë©´ ì§‘í•© ì—°ì‚°ìë¥¼ í™œìš©
 -- salary = 120008 OR salary = 8300
 SELECT first_name, salary FROM employees
 WHERE salary IN (SELECT salary FROM employees WHERE department_id = 110);
@@ -47,7 +47,7 @@ SELECT first_name, salary FROM employees
 WHERE salary > ANY (SELECT salary FROM employees WHERE department_id = 110);
 
 -- Correlated Query
--- ¿ÜºÎ Äõ¸®¿Í ³»ºÎ Äõ¸®°¡ ¿¬°ü°ü°è¸¦ ¸Î´Â Äõ¸®
+-- ì™¸ë¶€ ì¿¼ë¦¬ì™€ ë‚´ë¶€ ì¿¼ë¦¬ê°€ ì—°ê´€ê´€ê³„ë¥¼ ë§ºëŠ” ì¿¼ë¦¬
 SELECT e.department_id, e.employee_id, e.first_name, e.salary
 FROM employees e
 WHERE e.salary = (SELECT MAX(salary) FROM employees
@@ -55,42 +55,71 @@ WHERE e.salary = (SELECT MAX(salary) FROM employees
 ORDER BY e.department_id;
 
 -- Top-K Query
--- ROWNUM: ·¹ÄÚµåÀÇ ¼ø¼­¸¦ °¡¸®Å°´Â °¡»óÀÇ ÄÃ·³(Pseudo)
+-- ROWNUM: ë ˆì½”ë“œì˜ ìˆœì„œë¥¼ ê°€ë¦¬í‚¤ëŠ” ê°€ìƒì˜ ì»¬ëŸ¼(Pseudo)
 
--- 2007³â ÀÔ»çÀÚ Áß¿¡¼­ ±Ş¿© ¼øÀ§ 5À§±îÁö Ãâ·Â
-SELECT rownum ¼øÀ§, first_name ÀÌ¸§
+-- 2007ë…„ ì…ì‚¬ì ì¤‘ì—ì„œ ê¸‰ì—¬ ìˆœìœ„ 5ìœ„ê¹Œì§€ ì¶œë ¥
+SELECT rownum ìˆœìœ„, first_name ì´ë¦„
 FROM (SELECT * FROM employees
         WHERE hire_date LIKE '07%'
         ORDER BY salary DESC, first_name)
 WHERE rownum <= 5;
 
--- ÁıÇÕ ¿¬»ê: SET
--- UNION: ÇÕÁıÇÕ, UNION ALL: ÇÕÁıÇÕ, Áßº¹ ¿ä¼Ò Ã¼Å© ¾È ÇÔ(º°°³·Î º½)
--- INTERSECT: ±³ÁıÇÕ
--- MINUS: Â÷ÁıÇÕ
+-- ì§‘í•© ì—°ì‚°: SET
+-- UNION: í•©ì§‘í•©, UNION ALL: í•©ì§‘í•©, ì¤‘ë³µ ìš”ì†Œ ì²´í¬ ì•ˆ í•¨(ë³„ê°œë¡œ ë´„)
+-- INTERSECT: êµì§‘í•©
+-- MINUS: ì°¨ì§‘í•©
 
--- 05/01/01 ÀÌÀü ÀÔ»çÀÚ Äõ¸®
-SELECT first_name, salary, hire_date FROM employees WHERE hire_date < '05/01/01'; -- 24¸í
--- ±Ş¿©¸¦ 12000 ÃÊ°ú ¼ö·É »ç¿ø
-SELECT first_name, salary, hire_date FROM employees WHERE salary > 12000; -- 8¸í
-
-SELECT first_name, salary, hire_date FROM employees WHERE hire_date < '05/01/01'
-UNION -- ÇÕÁıÇÕ
-SELECT first_name, salary, hire_date FROM employees WHERE salary > 12000;   -- 26°³
-
+-- 05/01/01 ì´ì „ ì…ì‚¬ì ì¿¼ë¦¬
+SELECT first_name, salary, hire_date FROM employees WHERE hire_date < '05/01/01'; -- 24ëª…
+-- ê¸‰ì—¬ë¥¼ 12000 ì´ˆê³¼ ìˆ˜ë ¹ ì‚¬ì›
+SELECT first_name, salary, hire_date FROM employees WHERE salary > 12000; -- 8ëª…
 
 SELECT first_name, salary, hire_date FROM employees WHERE hire_date < '05/01/01'
-UNION ALL -- ÇÕÁıÇÕ: Áßº¹ Çã¿ë
+UNION -- í•©ì§‘í•©
+SELECT first_name, salary, hire_date FROM employees WHERE salary > 12000;   -- 26ê°œ
+
+
+SELECT first_name, salary, hire_date FROM employees WHERE hire_date < '05/01/01'
+UNION ALL -- í•©ì§‘í•©: ì¤‘ë³µ í—ˆìš©
 SELECT first_name, salary, hire_date FROM employees WHERE salary > 12000;   -- 32
 
 
 SELECT first_name, salary, hire_date FROM employees WHERE hire_date < '05/01/01'
-INTERSECT -- ±³ÁıÇÕ(AND)
+INTERSECT -- êµì§‘í•©(AND)
 SELECT first_name, salary, hire_date FROM employees WHERE salary > 12000;   --  6
 
 
 SELECT first_name, salary, hire_date FROM employees WHERE hire_date < '05/01/01'
-MINUS -- Â÷ÁıÇÕ
+MINUS -- ì°¨ì§‘í•©
 SELECT first_name, salary, hire_date FROM employees WHERE salary > 12000;   -- 18
+
+
+-- ìˆœìœ„ í•¨ìˆ˜
+-- RANK(): ì¤‘ë³µ ìˆœìœ„ê°€ ìˆìœ¼ë©´ ê±´ë„ˆ ë›´ë‹¤ (ì¼ë°˜ì ì¸ ìˆœìœ„ ì‚°ì • ë°©ì‹)
+-- DENSE_RANK(): ì¤‘ë³µ ìˆœìœ„ ìƒê´€ ì—†ì´ ë‹¤ìŒ ìˆœìœ„
+-- ROW_NUMBER(): ìˆœìœ„ ìƒê´€ ì—†ì´ ì°¨ë¡€ëŒ€ë¡œ (ì‹¤ì œ Tableì˜ Record ìˆœì„œëŒ€ë¡œ)
+
+SELECT salary, first_name,
+    RANK() OVER (ORDER BY salary DESC) rank,
+    DENSE_RANK() OVER (ORDER BY salary DESC) dense_rank,
+    ROW_NUMBER() OVER (ORDER BY salary DESC) row_number
+FROM employees;
+
+-- Hierachical Query(Oracle)
+-- Tree í˜•íƒœì˜ êµ¬ì¡° ì¶”ì¶œ
+-- LEVEL ê°€ìƒ ì»¬ëŸ¼
+
+SELECT level, employee_id, first_name, manager_id
+FROM employees
+START WITH manager_id IS NULL -- íŠ¸ë¦¬ ì‹œì‘ ì¡°ê±´
+CONNECT BY PRIOR employee_id = manager_id
+ORDER BY level;
+
+
+
+
+
+
+
 
 
