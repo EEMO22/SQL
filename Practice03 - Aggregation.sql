@@ -1,7 +1,7 @@
 -- 문제 1.
 -- 매니저가 있는 직원은 몇 명입니까? 아래의 결과가 나오도록 쿼리문을 작성하세요
 
-SELECT COUNT (*) "haveMngCnt"
+SELECT COUNT (manager_id) "haveMngCnt"
 FROM employees
 WHERE manager_id IS NOT NULL;
 
@@ -9,7 +9,7 @@ WHERE manager_id IS NOT NULL;
 -- 직원중에 최고임금(salary)과 최저임금을 “최고임금, “최저임금”프로젝션 타이틀로 함께 출력해 보세요. 
 -- 두 임금의 차이는 얼마인가요? “최고임금 – 최저임금”이란 타이틀로 함께 출력해 보세요.
 
-SELECT MIN(salary) 최저임금, MAX(salary) 최고임금,
+SELECT MAX(salary) 최고임금, MIN(salary) 최저임금,
     (MAX(salary) - MIN(salary)) "최고임금 - 최저임금"
 FROM employees;
 
@@ -17,16 +17,16 @@ FROM employees;
 -- 마지막으로 신입사원이 들어온 날은 언제 입니까? 다음 형식으로 출력해주세요.
 -- 예) 2014년 07월 10일
 
-SELECT MAX(TO_CHAR(hire_date, 'YYYY"년" MM"월 "DD"일"'))
+SELECT TO_CHAR(MAX(hire_date), 'YYYY"년" MM"월 "DD"일"')
 FROM employees;
 
 -- 문제 4.
 -- 부서별로 평균임금, 최고임금, 최저임금을 부서아이디(department_id)와 함께 출력합니다.
 -- 정렬순서는 부서번호(department_id) 내림차순입니다.
 
-SELECT ROUND(AVG(salary),2) 평균임금, MAX(salary) 최고임금, MIN(salary) 최저임금, 
-    department_id 부서아이디
-FROM employees
+SELECT department_id 부서아이디, 
+    ROUND(AVG(salary),2) 평균임금, MAX(salary) 최고임금, MIN(salary) 최저임금 
+    FROM employees
 GROUP BY department_id
 ORDER BY department_id DESC;
 
@@ -35,7 +35,8 @@ ORDER BY department_id DESC;
 -- 정렬순서는 최저임금 내림차순, 평균임금(소수점 반올림), 오름차순 순입니다.
 -- (정렬순서는 최소임금 2500 구간일때 확인해볼 것)
 
-SELECT ROUND(AVG(salary),1) 평균임금, MAX(salary) 최고임금, MIN(salary) 최저임금
+SELECT job_id,
+    ROUND(AVG(salary),1) 평균임금, MAX(salary) 최고임금, MIN(salary) 최저임금
 FROM employees
 GROUP BY job_id
 ORDER BY MIN(salary) DESC, ROUND(AVG(salary), 1) ASC;
@@ -44,7 +45,7 @@ ORDER BY MIN(salary) DESC, ROUND(AVG(salary), 1) ASC;
 -- 가장 오래 근속한 직원의 입사일은 언제인가요? 다음 형식으로 출력해주세요.
 -- 예) 2001-01-13 토요일
 
-SELECT MIN(TO_CHAR(hire_date, 'YYYY-MM-DD DAY')) 입사일
+SELECT TO_CHAR(MIN(hire_date), 'YYYY-MM-DD DAY') 입사일
 FROM employees;
 
 -- 문제 7.
