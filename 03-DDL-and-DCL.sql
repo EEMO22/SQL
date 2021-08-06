@@ -146,10 +146,15 @@ ADD CONSTRAINT fk_author_id FOREIGN KEY (author_id)
                             ON DELETE CASCADE;
                             
 
+-- DATA DICTIONARY
+-- 전체 데이터 딕셔너리 확인
+SELECT * FROM DICTIONARY;
 
+-- 사용자의 스키마 객체 확인: USER_OBJECTS
+SELECT * FROM USER_OBJECTS;
 
-
-
+-- 제약조건의 확인 : USER_CONSTRAINTS
+SELECT * FROM USER_CONSTRAINTS;
 
 
 
