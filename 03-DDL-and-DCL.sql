@@ -64,6 +64,44 @@ GRANT select ON HR.EMPLOYEES TO C##BITUSER;
 -- GRANT all privileges ...
 
 
+----------------
+-- DDL
+----------------
+
+-- 이후 C##BITUSER 로 진행
+
+-- 현재 내가 소유한 테이블 목록
+SELECT * FROM tab; -- tab: 가상테이블
+-- 현재 나에게 주어진 ROLE을 조회
+SELECT * FROM USER_ROLE_PRIVS; -- PRIVS : privilege
+
+-- CREATE TABLE: 테이블 생성
+CREATE TABLE book (
+    book_id NUMBER(5),
+    title VARCHAR2(50),
+    author VARCHAR2(10),
+    pub_date DATE DEFAULT SYSDATE
+);
+
+SELECT * FROM tab;
+
+DESC book; 
+--  테이블 정의 정보 확인
+
+-- 서브쿼리를 이용한 테이블 생성
+-- HR 스키마의 employhees 테이블의 일부 데이터를 추출, 새 테이블 생성
+SELECT * FROM HR.employees;
+
+-- job_id가 IT_관련 직원들만 뽑아내어 새 테이블 생성
+CREATE TABLE it_emps AS(
+    SELECT * FROM hr.employees
+    WHERE job_id LIKE 'IT_%'
+);
+
+DESC IT_EMPS;
+SELECT * FROM IT_EMPS;
+
+
 
 
 
