@@ -101,6 +101,57 @@ CREATE TABLE it_emps AS(
 DESC IT_EMPS;
 SELECT * FROM IT_EMPS;
 
+DROP TABLE IT_EMPS; --  테이블 삭제
+
+-- author 테이블 추가
+CREATE TABLE author (
+    author_id NUMBER(10),
+    author_name VARCHAR2(50) NOT NULL,
+    author_desc VARCHAR2(500),
+    PRIMARY KEY (author_id) -- 테이블 제약
+);
+
+DESC author;
+
+-- book 테이블의 author 컬럼 지우기
+-- 나중에 author 테이블과 FK 연결
+
+DESC book;
+
+ALTER TABLE book DROP COLUMN author;
+
+DESC book;
+
+-- author 테이블 참조를 위한 컬럼 author_id 추가
+ALTER TABLE book 
+ADD (author_id NUMBER(10));
+
+DESC book;
+
+-- book 테이블의 book_id도 NUMBER(10)으로 변경
+ALTER TABLE book
+MODIFY (book_id NUMBER(10));
+
+DESC book;
+DESC author;
+
+-- book.book_id 에 PK 제약조건 부여
+ALTER TABLE book
+ADD CONSTRAINT pk_book_id PRIMARY KEY (book_id);
+
+-- book.author_id를 author.author_id를 참조하도록 제약
+ALTER TABLE book
+ADD CONSTRAINT fk_author_id FOREIGN KEY (author_id)
+                            REFERENCES author(author_id)
+                            ON DELETE CASCADE;
+                            
+
+
+
+
+
+
+
 
 
 
