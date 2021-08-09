@@ -80,5 +80,101 @@ SELECT object_name, object_type, status FROM USER_OBJECTS
 WHERE object_type = 'VIEW';
 
 
+-- INDEX : 검색 속도 증가
+-- INSERT, UPDATE, DELETE -> 인덱스의 갱신 발생
+-- HR. employees 테이블 복사 -> s_emp 테이블 생성
+CREATE TABLE s_emp
+    AS SELECT * FROM HR.employees;
+    
+SELECT * FROM s_emp;
+
+-- s_emp.employee_id에 UNIQUE_INDEX 부여
+CREATE UNIQUE INDEX s_emp_id
+    ON s_emp (employee_id);
+
+-- INDEX를 위한 DICTIONARY
+SELECT * FROM USER_INDEXES;
+SELECT * FROM USER_IND_COLUMNS;
+
+-- 어느 테이블에 어느 컬럼에 S_EMP_ID가 부여되었는가?
+SELECT t.index_name, t.table_name, c.column_name, c.column_name
+FROM USER_INDEXES t, USER_IND_COLUMNS c
+WHERE t.index_name = c.index_name AND
+    t.table_name = 'S_EMP';
+
+SELECT * FROM s_emp;
+
+-- 인덱스 삭제
+DROP INDEX s_emp_id;
+SELECT * FROM USER_INDEXES;
+
+-- 인덱스는 테이블과 독립적: 인덱스 삭제해도 테이블 데이터는 남아 있다.
+
+
+-- SEQUENCE
+-- author 테이블 정보 확인 (PK)
+SELECT MAX(author_id) FROM author;
+
+INSERT INTO author(author_id, author_name)
+VALUES ((SELECT MAX (author_id) + 1 FROM author), 'Unknown');
+SELECT * FROM author;
+-- 안전하지 않을 수 있다. -> SELECT 는 Transaction 대상이 아니지만 DML은 Transaction의 대상이므로...
+-- 시퀀스 생성, 안전하게 중복 처리
+ROLLBACK;
+
+SELECT MAX(author_id) FROM author;
+
+CREATE SEQUENCE seq_author_id
+    START WITH 3
+    INCREMENT BY 1
+    MAXVALUE 100000;
+
+INSERT INTO author (author_id, author_name)
+VALUES (seq_author_id.NEXTVAL, 'Steven King');
+
+SELECT * FROM author;
+
+-- 새 시퀀스 만들기
+CREATE SEQUENCE my_seq
+    START WITH 1
+    INCREMENT BY 2
+    MAXVALUE 10;
+    
+-- Pseudo 컬럼: CURRVAL(현재 시퀀스 값), NEXTVAL(값을 증가 새 값)
+SELECT my_seq.NEXTVAL FROM dual;
+SELECT my_seq.CURRVAL FROM dual;
+
+-- 시퀀스 변경
+ALTER SEQUENCE my_seq
+    INCREMENT BY 3
+    MAXVALUE 1000000;
+    
+SELECT my_seq.CURRVAL FROM dual;
+SELECT my_seq.NEXTVAL FROM dual;
+
+
+-- SEQUENCE 를 위한 DICTIONARY
+SELECT * FROM USER_SEQUENCES;
+SELECT * FROM USER_OBJECTS
+WHERE object_type = 'SEQUENCE';
+
+-- 시퀀스 삭제
+DROP SEQUENCE my_seq;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
